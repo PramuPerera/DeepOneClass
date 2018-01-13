@@ -19,6 +19,7 @@ Pre-processing
 6. Edit prototext files to reflect correct paths. Specifically, 
    In solverVGG / solverdistance files, change 'net' and 'snapshot_prefix' with correct file paths.
    In VGGjoint2 / joint2 files, change 'source'  parameter in both data and data_c layers.
+7. Move distance_layer.py to caffe/python folder.   
 
 
 Training/ Testing
