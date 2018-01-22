@@ -1,4 +1,8 @@
 # DeepOneClass
+
+
+Implementation of the paper <b>Learning Deep Features for One-Class Classification</b>, https://arxiv.org/abs/1801.05365.
+
 Deep learning based one class classification code targeting one class image classification. Tests carried out on Abnormal image detection, Novel image detection and Active Authentication reported state of the art results.
 
 This document outlines how to use the deep one-class classification source code.
