@@ -8,6 +8,17 @@ Deep learning based one class classification code targeting one class image clas
 This document outlines how to use the deep one-class classification source code.
 Author : Pramuditha Perera (pramuditha.perera@rutgers.edu)
 
+If you found this code useful please cite our paper:
+
+@ARTICLE{2018arXiv180105365P,
+   author = {{Perera}, P. and {Patel}, V.~M.},
+    title = "{Learning Deep Features for One-Class Classification}",
+  journal = {ArXiv e-prints},
+archivePrefix = "arXiv",
+   eprint = {1801.05365},,
+     year = 2018,
+    month = jan,
+}
 
 Pre-processing
 --------------
