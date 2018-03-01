@@ -11,13 +11,13 @@ Author : Pramuditha Perera (pramuditha.perera@rutgers.edu)
 If you found this code useful please cite our paper:
 <pre><code>
 @ARTICLE{2018arXiv180105365P,
-   author = {{Perera}, P. and {Patel}, V.~M.},
-    title = "{Learning Deep Features for One-Class Classification}",
-  journal = {ArXiv e-prints},
+author = {{Perera}, P. and {Patel}, V.~M.},
+title = "{Learning Deep Features for One-Class Classification}",
+journal = {ArXiv e-prints},
 archivePrefix = "arXiv",
-   eprint = {1801.05365},,
-     year = 2018,
-    month = jan,
+eprint = {1801.05365},,
+year = 2018,
+month = jan,
 }
 </code></pre>
 Pre-processing
