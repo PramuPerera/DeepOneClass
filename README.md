@@ -9,7 +9,7 @@ This document outlines how to use the deep one-class classification source code.
 Author : Pramuditha Perera (pramuditha.perera@rutgers.edu)
 
 If you found this code useful please cite our paper:
-
+<pre><code>
 @ARTICLE{2018arXiv180105365P,
    author = {{Perera}, P. and {Patel}, V.~M.},
     title = "{Learning Deep Features for One-Class Classification}",
@@ -19,7 +19,7 @@ archivePrefix = "arXiv",
      year = 2018,
     month = jan,
 }
-
+</code></pre>
 Pre-processing
 --------------
 1. This code is developed targeting pycaffe framework. Please make sure caffe and python 2.7 is installed.
