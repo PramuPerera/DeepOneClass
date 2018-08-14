@@ -42,7 +42,7 @@ layer {
     crop_size: 224
   }
   image_data_param {
-    source: "examples/OneClass/src/src/train.txt"
+    source: "examples/DeepOneClass/train.txt"
     batch_size: 16
     new_height: 256
     new_width: 256
@@ -94,7 +94,7 @@ layer {
 
   }
   image_data_param {
-    source: "examples/OneClass/src/src/val.txt"
+    source: "examples/DeepOneClass/val.txt"
     batch_size: 16
     new_height: 256
     new_width: 256

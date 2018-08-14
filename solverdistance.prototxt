@@ -1,4 +1,4 @@
-net: "examples/OneClass/src/src/joint2.prototxt"
+net: "examples/DeepOneClass/joint2.prototxt"
 test_iter: 500
 test_interval: 500
 base_lr: 0.00005
@@ -10,6 +10,6 @@ max_iter: 10000
 momentum: 0.9
 weight_decay: 0.0005
 snapshot: 700
-snapshot_prefix: "examples/OneClass/src/src/Alex_JOINT_layers"
+snapshot_prefix: "examples/DeepOneClass/Alex_JOINT_layers"
 solver_mode: GPU
 

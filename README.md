@@ -28,6 +28,7 @@ Pre-processing
 	For VGG16 visit : http://www.robots.ox.ac.uk/~vgg/software/very_deep/caffe/VGG_ILSVRC_16_layers.caffemodel
 	For Alexnet visit : http://dl.caffe.berkeleyvision.org/bvlc_alexnet.caffemodel
 4. Download reference dataset to caffe/data. We use ImageNet validation set. It can be found at http://www.image-net.org/challenges/LSVRC/2012/nonpub-downloads
+Copy val2.txt and train2.txt files to /data/ilvrc_12/ folder.
 5. Download target datasets to caffe/data. For novelty detection we use Caltech 256 : http://www.vision.caltech.edu/Image_Datasets/Caltech256/
    For abnormal image detection, we use Abnormal 1001 as abnormal images : http://paul.rutgers.edu/~babaks/abnormality_detection.html
    Normal image classes are taken from PASCAL VOC dataset: http://host.robots.ox.ac.uk/pascal/VOC/voc2007/
@@ -49,15 +50,15 @@ should exist in caffe/data. Each sub folder (of each class) should ne numbered s
 There exists four modes of operation. To test just first class:
 
 1. Using Alexnet features
-    $python  examples/OneClass/src/src/run.py --dataset data/ --backbone Alex --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task abnormal --type feature
+    $python  examples/DeepOneClass/run.py --dataset data/ --backbone Alex --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task abnormal --type feature
 
 2. Using VGG16 features
-    $python  examples/OneClass/src/src/run.py --dataset data/ --backbone VGG --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task abnormal --type feature
+    $python  examples/DeepOneClass/run.py --dataset data/ --backbone VGG --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task abnormal --type feature
 3. Using Alexnet DOC (ours)
-    $python  examples/OneClass/src/src/run.py --dataset data/ --backbone Alex --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task abnormal
+    $python  examples/DeepOneClass/run.py --dataset data/ --backbone Alex --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task abnormal
 
 4. Using VGG16 DOC (ours)
-   $python  examples/OneClass/src/src/run.py --dataset data/ --backbone VGG --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task abnormal
+   $python  examples/DeepOneClass/run.py --dataset data/ --backbone VGG --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task abnormal
 
 If all 6 classes needs to be tested replace --noneclass 6.
 
@@ -71,15 +72,15 @@ Novelty detection dataset should be stored in the  caffe/data/novelty directory.
 There exists four modes of operation. To test just first class:
 
 1. Using Alexnet features
-    $python  examples/OneClass/src/src/run.py --dataset data/ --backbone Alex --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task novelty --type feature 
+    $python  examples/DeepOneClass/run.py --dataset data/ --backbone Alex --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task novelty --type feature 
 
 2. Using VGG16 features
-    $python  examples/OneClass/src/src/run.py --dataset data/ --backbone VGG --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task novelty --type feature
+    $python  examples/DeepOneClass/run.py --dataset data/ --backbone VGG --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task novelty --type feature
 3. Using Alexnet DOC (ours)
-    $python  examples/OneClass/src/src/run.py --dataset data/ --backbone Alex --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task novelty
+    $python  examples/DeepOneClass/run.py --dataset data/ --backbone Alex --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task novelty
 
 4. Using VGG16 DOC (ours)
-    $python  examples/OneClass/src/src/run.py --dataset data/ --backbone VGG --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task novelty
+    $python  examples/DeepOneClass/run.py --dataset data/ --backbone VGG --cafferoot /home/labuser/caffe/ --nclass 6 --noneclass 1 --task novelty
 
 If 40 classes needs to be tested instead of just the first, replace --noneclass 40.
 

@@ -1,4 +1,4 @@
-net: "examples/OneClass/src/src/VGGJoint2.prototxt"
+net: "examples/DeepOneClass/VGGJoint2.prototxt"
 test_iter: 100
 test_interval: 300
 base_lr: 0.00005
@@ -10,6 +10,6 @@ max_iter: 10000
 momentum: 0.9
 weight_decay: 0.0005
 snapshot: 700
-snapshot_prefix: "examples/OneClass/src/src/VGG_JOINT_layers"
+snapshot_prefix: "examples/DeepOneClass/VGG_JOINT_layers"
 solver_mode: GPU
 
