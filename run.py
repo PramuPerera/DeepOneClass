@@ -188,7 +188,7 @@ for user_no in range(1,int(args.noneclass)+1):
 			model_weights = 'VGG_JOINT_layers_iter_'+str(niter)+'.caffemodel'
 		else:
 			model_weights = caffe_root+ 'models/VGG_ILSVRC_16_layers.caffemodel'
-		fpr,tpr,roc_auc = classifyImage.getResults(model_def,model_weights,args.name
+		fpr1,tpr1,roc_auc1,fpr2,tpr2,roc_auc2,fpr3,tpr3,roc_auc3,fpr4,tpr4,roc_auc4 = classifyImage.getResults(model_def,model_weights,args.name
 							  +args.name+'_'+str(users[user_no-1])+args.backbone+'_'+args.type+".txt",20,'VGG',caffe_root )
 
 	elif args.backbone == "Alex":
@@ -197,12 +197,15 @@ for user_no in range(1,int(args.noneclass)+1):
 			model_weights = 'Alex_JOINT_layers_iter_'+str(niter)+'.caffemodel'
 		else:
 			model_weights = caffe_root + 'models/bvlc_alexnet.caffemodel'
-		fpr,tpr,roc_auc = classifyImage.getResults(model_def,model_weights,physical_dir+'/'+args.output+'/'
+		fpr1,tpr1,roc_auc1,fpr2,tpr2,roc_auc2,fpr3,tpr3,roc_auc3,fpr4,tpr4,roc_auc4 = classifyImage.getResults(model_def,model_weights,physical_dir+'/'+args.output+'/'
 						       +args.name+'_'+str(users[user_no-1])+args.backbone+'_'+args.type+".txt",40,'Alex',caffe_root )
 	print('Area under the curve: ' + str(roc_auc))
 	if args.visualize:
 		fig = plt.figure()
-		plt.plot(fpr, tpr,lw=2, label='ROC curce ' + str(roc_auc))
+		plt.plot(fpr1, tpr1,lw=2, label='ROC curce NN' + str(roc_auc1))
+                plt.plot(fpr2, tpr2,lw=2, label='ROC curce IF' + str(roc_auc2))
+                plt.plot(fpr3, tpr3,lw=2, label='ROC curce SVM' + str(roc_auc3))
+                plt.plot(fpr4, tpr4,lw=2, label='ROC curce GMM' + str(roc_auc4))
 		plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
 		plt.xlim([0.0, 1.0])
 		plt.ylim([0.0, 1.05])

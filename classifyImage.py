@@ -50,6 +50,10 @@ def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root):
 	from sklearn.metrics import roc_curve, auc
 	import sys
 	import caffe
+	from sklearn import svm
+	from sklearn.ensemble import IsolationForest
+	from sklearn.mixture import GaussianMixture
+        from sklearn.isotonic import IsotonicRegression
 	sys.path.insert(0, caffe_root + 'python')
 	caffepath = caffe_root
 	caffe.set_device(0)
@@ -88,6 +92,12 @@ def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root):
 		probefeatures = getFeaturesFromMatrix (images,transformer, net)		
 		signature[nblocks*max_sig_size:(nblocks+1)*max_sig_size,:]=getFeaturesFromMatrix (images,transformer, net)
 		nblocks+=1
+        svmmodel = svm.OneClassSVM(nu=0.1, kernel="rbf", gamma=0.1)
+        svmmodel.fit(signature)
+        ifmodel = IsolationForest(contamination=0.08, max_features=1.0, max_samples=1.0, n_estimators=40)
+        ifmodel.fit(signature)
+        gmmmodel = GaussianMixture(covariance_type='spherical', n_components=18, max_iter=int(1e7))
+        gmmmodel.fit(signature)
 	#Get test data and compare with validation data
 	f = open("test.txt")
 	testfiles=[];
@@ -98,7 +108,9 @@ def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root):
   	 labels.append(int(currFileNames[1])) # matched
 	f.close()
 	matched=[];
-
+        matchedsvm = []
+        matchedif =[]
+        matchedgmm= []
 	#Testing
 	print("TESTING..")
 	max_test_size =bsize;
@@ -122,14 +134,25 @@ def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root):
 					sig = signature[p,:]			
 					distance.append(np.sqrt(float(np.dot(vec-signature[p],vec-signature[p]))));
 				matched.append((-1)*min(distance))
+			matchedif += ifmodel.decision_function(probefeatures)	
+			matchedsvm += svmmodel.decision_function(probefeatures)
+			matchedgmm += gmmmodel.score_samples(probefeatures)
 	labels= labels[0:len(matched)]
 	text_file = open(str(outfile), "w")
 	for x in range(len(matched)):
-		text_file.write("%s %s\n" % (str(matched[x]), str(labels[x])))
-	text_file.close()
-	fpr, tpr, _ = roc_curve(labels, matched, 0)
-	roc_auc = auc(fpr, tpr)
-	return(fpr,tpr,roc_auc)
+		text_file.write("%s %s %s %s %s \n" % (str(matched[x]), str(matchedif[x]), str(matchedsvm[x]), str(matchedgmm[x]), str(labels[x])))
+	text_file.close()`
+	fpr1, tpr1, _ = roc_curve(labels, matched, 0)
+	roc_auc1 = auc(fpr1, tpr1)
+	fpr2, tpr2, _ = roc_curve(labels, matchedif, 0)
+	roc_auc2 = auc(fpr2, tpr2)
+	fpr3, tpr3, _ = roc_curve(labels, matchedsvm, 0)
+	roc_auc3 = auc(fpr3, tpr3)
+	fpr4, tpr4, _ = roc_curve(labels, matchedgmm, 0)
+	roc_auc4 = auc(fpr4, tpr4)
+
+	
+	return(fpr1,tpr1,roc_auc1,fpr2,tpr2,roc_auc2,fpr3,tpr3,roc_auc3,fpr4,tpr4,roc_auc4)
 
 
 
