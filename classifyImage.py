@@ -43,7 +43,7 @@ def getNet (model_def ,model_weights, csize, caffepath, bs):
 	return net, transformer
 
 
-def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root):
+def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root,rocname):
 	import numpy as np
 	from random import shuffle
 	import os
@@ -141,7 +141,8 @@ def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root):
 	text_file = open(str(outfile), "w")
 	for x in range(len(matched)):
 		text_file.write("%s %s %s %s %s \n" % (str(matched[x]), str(matchedif[x]), str(matchedsvm[x]), str(matchedgmm[x]), str(labels[x])))
-	text_file.close()`
+	text_file.close()
+	
 	fpr1, tpr1, _ = roc_curve(labels, matched, 0)
 	roc_auc1 = auc(fpr1, tpr1)
 	fpr2, tpr2, _ = roc_curve(labels, matchedif, 0)
@@ -150,7 +151,10 @@ def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root):
 	roc_auc3 = auc(fpr3, tpr3)
 	fpr4, tpr4, _ = roc_curve(labels, matchedgmm, 0)
 	roc_auc4 = auc(fpr4, tpr4)
-
+        
+	text_file = open(str(rocname), "a")
+	text_file.write("%s %s %s %s \n" % (str(roc_auc1), str(roc_auc2), str(roc_auc3), str(roc_auc4)))
+	text_file.close()
 	
 	return(fpr1,tpr1,roc_auc1,fpr2,tpr2,roc_auc2,fpr3,tpr3,roc_auc3,fpr4,tpr4,roc_auc4)
 

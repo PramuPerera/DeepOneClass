@@ -158,7 +158,11 @@ if not os.path.isdir(physical_dir+'/'+args.output):
 
 
 for user_no in range(1,int(args.noneclass)+1):
-	os.chdir(caffe_root)	
+	os.chdir(caffe_root)
+        # File tp record ROC values
+        text_file = open(args.name+'_'+args.backbone+'_'+args.type+'_roc.txt', "w")
+        text_file.close()
+	
 	print("Writing files done for user"+ str(users[user_no-1]) +"...")
 	if args.task == "novelty":
 		writeFileNames.write(user_no, users, path,subpath, physical_dir+"/")
@@ -189,7 +193,7 @@ for user_no in range(1,int(args.noneclass)+1):
 		else:
 			model_weights = caffe_root+ 'models/VGG_ILSVRC_16_layers.caffemodel'
 		fpr1,tpr1,roc_auc1,fpr2,tpr2,roc_auc2,fpr3,tpr3,roc_auc3,fpr4,tpr4,roc_auc4 = classifyImage.getResults(model_def,model_weights,args.name
-							  +args.name+'_'+str(users[user_no-1])+args.backbone+'_'+args.type+".txt",20,'VGG',caffe_root )
+							  +args.name+'_'+str(users[user_no-1])+args.backbone+'_'+args.type+".txt",20,'VGG',caffe_root,args.name+'_'+args.backbone+'_'+args.type+'_roc.txt')
 
 	elif args.backbone == "Alex":
 		model_def = 'deploy_alex.prototxt'
