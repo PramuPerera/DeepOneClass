@@ -202,8 +202,8 @@ for user_no in range(1,int(args.noneclass)+1):
 		else:
 			model_weights = caffe_root + 'models/bvlc_alexnet.caffemodel'
 		fpr1,tpr1,roc_auc1,fpr2,tpr2,roc_auc2,fpr3,tpr3,roc_auc3,fpr4,tpr4,roc_auc4 = classifyImage.getResults(model_def,model_weights,physical_dir+'/'+args.output+'/'
-						       +args.name+'_'+str(users[user_no-1])+args.backbone+'_'+args.type+".txt",40,'Alex',caffe_root )
-	print('Area under the curve: ' + str(roc_auc))
+						       +args.name+'_'+str(users[user_no-1])+args.backbone+'_'+args.type+".txt",40,'Alex',caffe_root,args.name+'_'+args.backbone+'_'+args.type+'_roc.txt' )
+	print('Area under the curve: ' + str(roc_auc1)+' '+str(roc_auc2)+' '+str(roc_auc3)+' '+str(roc_auc4))
 	if args.visualize:
 		fig = plt.figure()
 		plt.plot(fpr1, tpr1,lw=2, label='ROC curce NN' + str(roc_auc1))

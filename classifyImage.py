@@ -92,7 +92,7 @@ def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root,rocname):
 		probefeatures = getFeaturesFromMatrix (images,transformer, net)		
 		signature[nblocks*max_sig_size:(nblocks+1)*max_sig_size,:]=getFeaturesFromMatrix (images,transformer, net)
 		nblocks+=1
-        svmmodel = svm.OneClassSVM(nu=0.1, kernel="rbf", gamma=0.1)
+        svmmodel = svm.OneClassSVM(nu=0.1, kernel="rbf", gamma=0.001)
         svmmodel.fit(signature)
         ifmodel = IsolationForest(contamination=0.08, max_features=1.0, max_samples=1.0, n_estimators=40)
         ifmodel.fit(signature)
@@ -134,9 +134,11 @@ def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root,rocname):
 					sig = signature[p,:]			
 					distance.append(np.sqrt(float(np.dot(vec-signature[p],vec-signature[p]))));
 				matched.append((-1)*min(distance))
-			matchedif += ifmodel.decision_function(probefeatures)	
-			matchedsvm += svmmodel.decision_function(probefeatures)
-			matchedgmm += gmmmodel.score_samples(probefeatures)
+			
+			matchedif += (ifmodel.decision_function(probefeatures)).tolist()	
+			matchedsvm += (svmmodel.decision_function(probefeatures)).tolist()
+			matchedgmm += (gmmmodel.score_samples(probefeatures)).tolist()
+	print(np.shape(matchedif))
 	labels= labels[0:len(matched)]
 	text_file = open(str(outfile), "w")
 	for x in range(len(matched)):
