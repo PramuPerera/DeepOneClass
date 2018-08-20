@@ -7,7 +7,7 @@ import glob
 from random import shuffle
 
 
-def writeAbnormal (user_no, users, path, subpath,curr_path):
+def writeAbnormal (user_no, users, path, subpath,curr_path, typ):
 
 	print("Writing files for user"+str(users[user_no-1]))
 	dirs = os.listdir(path+'Normal_Object_Dataset/'+str(users[user_no-1]));
@@ -16,6 +16,14 @@ def writeAbnormal (user_no, users, path, subpath,curr_path):
 	text_file = open(curr_path+"train.txt", "w")
 	for x in range(0, int(floor(size(dirs)*0.5))):
 		text_file.write("%s%s/%s 0\n" % (subpath+'Normal_Object_Dataset/',str(users[user_no-1]),dirs[x]))
+
+	if typ == "bi":
+		imagenetpath = 'data/ilsvrc12/data/'
+		dirs2 = os.listdir(imagenetpath);
+		shuffle(dirs2)
+		# add negative training samples to the train val files
+		for x in range(0, int(floor(size(dirs)*0.5))):
+				text_file.write("%s%s 1\n" % (imagenetpath,dirs2[x]))
 	text_file.close()
 
 
@@ -43,7 +51,7 @@ def writeAbnormal (user_no, users, path, subpath,curr_path):
 	text_file.close()
 
 
-def write (user_no, users, path, subpath,curr_path):
+def write (user_no, users, path, subpath,curr_path,typ):
 
 	print("Writing files for user"+str(user_no))
 	dirs = os.listdir(path+'/'+str(user_no));
@@ -52,6 +60,13 @@ def write (user_no, users, path, subpath,curr_path):
 	text_file = open(curr_path+"train.txt", "w")
 	for x in range(0, int(floor(size(dirs)*0.5))):
 		text_file.write("%s%s/%s 0\n" % (subpath+'/',str(user_no),dirs[x]))
+	if typ == "bi":
+		imagenetpath = 'data/ilsvrc12/data/'
+		dirs2 = os.listdir(imagenetpath);
+		shuffle(dirs2)
+		# add negative training samples to the train val files
+		for x in range(0, int(floor(size(dirs)*0.5))):
+				text_file.write("%s%s 1\n" % (imagenetpath,dirs2[x]))
 	text_file.close()
 
 
@@ -70,7 +85,6 @@ def write (user_no, users, path, subpath,curr_path):
 		text_file.write("%s%s/%s 0\n" % (subpath+'/',str(user_no),dirs[x]))
 
 	items_per_intruder_class = int(floor(0.5*size(dirs)/len(intruder_classes)));
-	print(users)
 
 	for y in intruder_classes :
 		dirs = os.listdir(path+'/'+str(y));

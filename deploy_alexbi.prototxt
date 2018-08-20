@@ -181,10 +181,39 @@ layer {
     num_output: 4096
   }
 }
+
+
 #layer {
 #  name: "relu7"
 #  type: "ReLU"
 #  bottom: "fc7"
 #  top: "fc7"
 #}
+#layer {
+#  name: "drop7"
+#  type: "Dropout"
+#  bottom: "fc7"
+#  top: "fc7"
+#  dropout_param {
+#    dropout_ratio: 0.5
+#  }
+#}
+#layer {
+#  name: "fc8_"
+#  type: "InnerProduct"
+#  bottom: "fc7"
+#  top: "fc8_"
+#  param {
+#    lr_mult: 1
+#    decay_mult: 1
+#  }
+#  param {
+#    lr_mult: 2
+#    decay_mult: 0
+#  }
+#  inner_product_param {
+#    num_output: 2
+#  }
+#}
+
 

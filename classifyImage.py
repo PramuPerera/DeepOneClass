@@ -7,10 +7,13 @@ def getFeature (imagepath,transformer, net):
 	return feature
 
 
-def getFeaturesFromMatrix (matrix,transformer, net):
+def getFeaturesFromMatrix (matrix,transformer, net, latent):
 	net.blobs['data'].data[...] = matrix
 	output = net.forward()
-	feature= output['fc7']
+	if latent == 2:
+		feature= output['fc8_']
+	else:
+		feature= output['fc7']
 	return feature
 
 
@@ -43,7 +46,8 @@ def getNet (model_def ,model_weights, csize, caffepath, bs):
 	return net, transformer
 
 
-def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root,rocname):
+def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root,rocname,latent):
+
 	import numpy as np
 	from random import shuffle
 	import os
@@ -72,13 +76,13 @@ def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root,rocname):
 	   currFileNames = l.strip().split(" " );  
  	   signature_files.append(currFileNames[0])
 	f.close()
-
+	
 	net, transformer = getNet (model_def ,model_weights, csize, caffepath, loadsz);	
 	max_sig_size =bsize;
 	images = np.empty((max_sig_size,3,csize,csize))
 	count = 0;
 	probeimages = np.zeros((max_sig_size,3,csize,csize))
-	signature = np.zeros((len(signature_files),4096)) 
+	signature = np.zeros((len(signature_files),latent)) 
 	nblocks = 0;
 	for l in range(len(signature_files)):  
  	  image = caffe.io.load_image(caffepath+signature_files[l])	
@@ -89,9 +93,11 @@ def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root,rocname):
 		
 	  if count==max_sig_size:
 		count = 0;
-		probefeatures = getFeaturesFromMatrix (images,transformer, net)		
-		signature[nblocks*max_sig_size:(nblocks+1)*max_sig_size,:]=getFeaturesFromMatrix (images,transformer, net)
+		probefeatures = getFeaturesFromMatrix (images,transformer, net,latent)		
+		signature[nblocks*max_sig_size:(nblocks+1)*max_sig_size,:]=getFeaturesFromMatrix (images,transformer, net,latent)
 		nblocks+=1
+	
+	print('done')
         svmmodel = svm.OneClassSVM(nu=0.1, kernel="rbf", gamma=0.001)
         svmmodel.fit(signature)
         ifmodel = IsolationForest(contamination=0.08, max_features=1.0, max_samples=1.0, n_estimators=40)
@@ -124,7 +130,7 @@ def getResults(model_def,model_weights,outfile,bsize,nw,caffe_root,rocname):
 		if count==max_test_size:
 			#batch is complete
 			count = 0;
-			probefeatures = getFeaturesFromMatrix (probeimages,transformer, net)		
+			probefeatures = getFeaturesFromMatrix (probeimages,transformer, net,latent)		
 			probeimages = np.zeros((max_test_size,3,csize,csize))
 			for c in range(np.shape(probefeatures)[0]):
 				vec = probefeatures[c,:];

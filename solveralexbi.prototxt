@@ -1,12 +1,12 @@
-net: "examples/DeepOneClass/joint2.prototxt"
+net: "examples/DeepOneClass/alex.prototxt"
 test_iter: 500
 test_interval: 500
 base_lr: 0.00005
 lr_policy: "step"
 gamma: 0.001
-stepsize: 5000
-display: 50
-max_iter: 10000
+stepsize: 100000
+display: 200
+max_iter: 450000
 momentum: 0.9
 weight_decay: 0.0005
 snapshot: 300

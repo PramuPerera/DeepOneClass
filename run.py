@@ -120,7 +120,7 @@ def arguments():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("--name", default="oneclassVGG", help="Name of the network")
-    parser.add_argument("--type", default="oneclass", help="Type of CNN : oneclass / feature ")
+    parser.add_argument("--type", default="oneclass", help="Type of CNN : oneclass / feature / bi ")
     parser.add_argument("--output", default='output', help="Output directory")
     parser.add_argument("--dataset", default="data/abnormal/",
                         help="Specify the path to the training dataset")
@@ -156,18 +156,18 @@ users = range(1,int(args.nclass)+1)
 if not os.path.isdir(physical_dir+'/'+args.output):
 	os.mkdir(physical_dir+'/'+args.output)
 
-
+text_file = open(args.name+'_'+args.backbone+'_'+args.type+'_roc.txt', "w")
+text_file.close()
 for user_no in range(1,int(args.noneclass)+1):
 	os.chdir(caffe_root)
         # File tp record ROC values
-        text_file = open(args.name+'_'+args.backbone+'_'+args.type+'_roc.txt', "w")
-        text_file.close()
-	
+
+	latent = 4096
 	print("Writing files done for user"+ str(users[user_no-1]) +"...")
 	if args.task == "novelty":
-		writeFileNames.write(user_no, users, path,subpath, physical_dir+"/")
+		writeFileNames.write(user_no, users, path,subpath, physical_dir+"/", args.type)
 	elif args.task == "abnormal":
-		writeFileNames.writeAbnormal(user_no, users, path,subpath, physical_dir+"/")
+		writeFileNames.writeAbnormal(user_no, users, path,subpath, physical_dir+"/", args.type)
 	solver = None  
 	if args.type == "oneclass":
 		if args.backbone == "VGG":
@@ -183,26 +183,50 @@ for user_no in range(1,int(args.noneclass)+1):
     				solver.test_nets[0].forward(start='conv1_1')
   			elif args.backbone == "Alex":
     				solver.test_nets[0].forward(start='conv1')
+
+	elif args.type == "bi":
+		#latent = 2
+		if args.backbone == "VGG":
+			solver = caffe.SGDSolver(physical_dir+'/solverbi.prototxt')
+			solver.net.copy_from('models/VGG_ILSVRC_16_layers.caffemodel')
+		elif args.backbone == "Alex":
+			solver = caffe.SGDSolver(physical_dir+'/solveralexbi.prototxt')
+			solver.net.copy_from('models/bvlc_alexnet.caffemodel')
+		
+		for it in range(niter):
+    			solver.step(1)  
+  			if args.backbone == "VGG":
+    				solver.test_nets[0].forward(start='conv1_1')
+  			elif args.backbone == "Alex":
+    				solver.test_nets[0].forward(start='conv1')
+		
 	
 	print("Classifying files...")
 	os.chdir(physical_dir)
 	if args.backbone == "VGG":
-		model_def = 'deploy.prototxt'
-		if args.type == "oneclass":
+		if args.type == "oneclass" :
+			model_def = 'deploy.prototxt'
+			model_weights = 'VGG_JOINT_layers_iter_'+str(niter)+'.caffemodel'
+		elif args.type == "bi" :
+			model_def = 'deploybi.prototxt'
 			model_weights = 'VGG_JOINT_layers_iter_'+str(niter)+'.caffemodel'
 		else:
+			model_def = 'deploy.prototxt'	
 			model_weights = caffe_root+ 'models/VGG_ILSVRC_16_layers.caffemodel'
 		fpr1,tpr1,roc_auc1,fpr2,tpr2,roc_auc2,fpr3,tpr3,roc_auc3,fpr4,tpr4,roc_auc4 = classifyImage.getResults(model_def,model_weights,args.name
-							  +args.name+'_'+str(users[user_no-1])+args.backbone+'_'+args.type+".txt",20,'VGG',caffe_root,args.name+'_'+args.backbone+'_'+args.type+'_roc.txt')
+							  +args.name+'_'+str(users[user_no-1])+args.backbone+'_'+args.type+".txt",20,'VGG',caffe_root,args.name+'_'+args.backbone+'_'+args.type+'_roc.txt',latent)
+		
 
 	elif args.backbone == "Alex":
 		model_def = 'deploy_alex.prototxt'
-		if args.type == "oneclass":
+		if args.type == "oneclass" :
+			model_weights = 'Alex_JOINT_layers_iter_'+str(niter)+'.caffemodel'
+		elif args.type == "bi" :
+			model_def = 'deploy_alexbi.prototxt'
 			model_weights = 'Alex_JOINT_layers_iter_'+str(niter)+'.caffemodel'
 		else:
 			model_weights = caffe_root + 'models/bvlc_alexnet.caffemodel'
-		fpr1,tpr1,roc_auc1,fpr2,tpr2,roc_auc2,fpr3,tpr3,roc_auc3,fpr4,tpr4,roc_auc4 = classifyImage.getResults(model_def,model_weights,physical_dir+'/'+args.output+'/'
-						       +args.name+'_'+str(users[user_no-1])+args.backbone+'_'+args.type+".txt",40,'Alex',caffe_root,args.name+'_'+args.backbone+'_'+args.type+'_roc.txt' )
+		fpr1,tpr1,roc_auc1,fpr2,tpr2,roc_auc2,fpr3,tpr3,roc_auc3,fpr4,tpr4,roc_auc4 = classifyImage.getResults(model_def,model_weights,physical_dir+'/'+args.output+'/'+args.name+'_'+str(users[user_no-1])+args.backbone+'_'+args.type+".txt",40,'Alex',caffe_root,args.name+'_'+args.backbone+'_'+args.type+'_roc.txt',latent)
 	print('Area under the curve: ' + str(roc_auc1)+' '+str(roc_auc2)+' '+str(roc_auc3)+' '+str(roc_auc4))
 	if args.visualize:
 		fig = plt.figure()

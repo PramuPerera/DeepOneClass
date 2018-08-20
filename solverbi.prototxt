@@ -1,11 +1,11 @@
-net: "examples/DeepOneClass/VGGJoint2.prototxt"
-test_iter: 100
+net: "examples/DeepOneClass/VGG.prototxt"
+test_iter: 200
 test_interval: 300
 base_lr: 0.00005
 lr_policy: "step"
 gamma: 0.001
 stepsize: 5000
-display: 50
+display: 200
 max_iter: 10000
 momentum: 0.9
 weight_decay: 0.0005
