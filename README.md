@@ -114,3 +114,17 @@ output
 ------
 A text file with one-class score values will be written to the output folder. If '--visualize' option is set to True, a ROC
 curve will also be generated.
+
+
+
+Changing the Reference Dataset
+------------------------------
+Default parameter values in the repo is set to use ILVRSC12 dataset as the reference dataset. If a different reference dataset needed to be tried out, following steps should be followed. For example, if the new dataset is places365,
+
+1. Download the reference dataset images to /caffe/data/places365/data. Save file names of each image file into the files caffe/data/places365/train2.txt and /caffe/data/places365/val2.txt. File name should be specified relative to the caffe directory followed by the associated class label. For an example: data/places/data/Places365_val_00000001.jpg 165
+
+2. Download/place caffemodels trained on the new dataset to /caffe/models folder. For example, alexnet model for places 365 is alexnet_places365.caffemodel found at Caffe Model Zoo.
+
+3. In VGGJoint2.prototex, joint2.prototex files, change source under data_c to the new path of train/validation files. Eg: for places365, these values should be "data/places365/val2.txt" and "data/places365/train2.txt". Change num_output parameter to the number of class in the new dataset in files. For places365 this is 365. 
+
+4. In WriteFileNames.py set imagenetpath to the new dataset. Eg: imagenetpath = 'data/places365/data/'
