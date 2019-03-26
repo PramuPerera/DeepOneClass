@@ -128,3 +128,4 @@ Default parameter values in the repo is set to use ILVRSC12 dataset as the refer
 3. In VGGJoint2.prototex, joint2.prototex files, change source under data_c to the new path of train/validation files. Eg: for places365, these values should be "data/places365/val2.txt" and "data/places365/train2.txt". Change num_output parameter to the number of class in the new dataset in files. For places365 this is 365. 
 
 4. In WriteFileNames.py set imagenetpath to the new dataset. Eg: imagenetpath = 'data/places365/data/'
+5. Make sure layer names of the pretrained models are same as the layer names of prototex files.
